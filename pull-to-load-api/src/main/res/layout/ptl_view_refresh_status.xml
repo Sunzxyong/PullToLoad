@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:aapt="http://schemas.android.com/aapt"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp">
+
+            <ImageView
+                android:id="@+id/img_refresh_info"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ptl_ic_arrow_downward"
+                android:visibility="visible"/>
+
+            <ProgressBar
+                android:id="@+id/progress_refreshing"
+                style="?android:attr/progressBarStyleInverse"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:indeterminate="true"
+                android:indeterminateDuration="1000"
+                android:visibility="gone">
+
+                <aapt:attr name="android:indeterminateDrawable">
+
+                    <rotate
+                        android:fromDegrees="0"
+                        android:pivotX="50%"
+                        android:pivotY="50%"
+                        android:toDegrees="360">
+
+                        <shape
+                            android:innerRadiusRatio="3"
+                            android:shape="ring"
+                            android:thicknessRatio="8"
+                            android:useLevel="false">
+
+                            <gradient
+                                android:centerY="0.50"
+                                android:endColor="#BDBDBD"
+                                android:startColor="#9E9E9E"
+                                android:type="sweep"
+                                android:useLevel="false"/>
+                        </shape>
+
+                    </rotate>
+
+                </aapt:attr>
+
+            </ProgressBar>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_refresh_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ptl_prepare_to_refresh"
+            android:textColor="#757575"
+            android:textSize="14sp"/>
+    </LinearLayout>
+</FrameLayout>

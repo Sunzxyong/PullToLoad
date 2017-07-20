@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:aapt="http://schemas.android.com/aapt"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="#f6f6f6">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleInverse"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:indeterminate="true"
+            android:indeterminateDuration="1000">
+
+            <aapt:attr name="android:indeterminateDrawable">
+
+                <rotate
+                    android:fromDegrees="0"
+                    android:pivotX="50%"
+                    android:pivotY="50%"
+                    android:toDegrees="360">
+
+                    <shape
+                        android:innerRadiusRatio="3"
+                        android:shape="ring"
+                        android:thicknessRatio="8"
+                        android:useLevel="false">
+
+                        <gradient
+                            android:centerY="0.50"
+                            android:endColor="#BDBDBD"
+                            android:startColor="#9E9E9E"
+                            android:type="sweep"
+                            android:useLevel="false"/>
+                    </shape>
+
+                </rotate>
+
+            </aapt:attr>
+
+        </ProgressBar>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="@string/ptl_load_more"
+            android:textColor="#757575"
+            android:textSize="14sp"/>
+    </LinearLayout>
+</FrameLayout>

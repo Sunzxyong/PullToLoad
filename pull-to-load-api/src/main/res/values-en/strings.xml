@@ -1,0 +1,9 @@
+<resources>
+    <string name="ptl_prepare_to_refresh">pull down to refresh</string>
+    <string name="ptl_ready_to_refresh">release to refresh</string>
+    <string name="ptl_is_refreshing">refreshing…</string>
+    <string name="ptl_finish_to_refresh">completed</string>
+
+    <string name="ptl_load_more">loading…</string>
+    <string name="ptl_no_more">- end -</string>
+</resources>

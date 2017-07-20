@@ -1,0 +1,48 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        resourcePrefix 'ptl_'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+}
+
+ext {
+    upload_group_id = 'com.zxy.android'
+    upload_artifact_id = 'pull-to-load'
+    upload_version = '0.0.1.1'
+
+    site_url = 'https://github.com/Sunzxyong/pull-to-load'
+    git_url = 'https://github.com/Sunzxyong/pull-to-load.git'
+    git_issue_url = 'https://github.com/Sunzxyong/pull-to-load/issues'
+
+    bintray_pkg_repo = 'maven'
+    bintray_pkg_name = 'pull-to-load'
+    bintray_pkg_desc = 'a refresh framework supports any view and multiple nested views, and contains the wrapper which can load more.'
+
+    developer_id = 'Sunzxyong'
+    developer_name = 'zhengxiaoyong'
+    developer_email = '1175151739@qq.com'
+}
+
+apply from: 'publish.gradle'

@@ -1,0 +1,9 @@
+<resources>
+    <string name="ptl_prepare_to_refresh">下拉刷新</string>
+    <string name="ptl_ready_to_refresh">释放刷新</string>
+    <string name="ptl_is_refreshing">刷新中…</string>
+    <string name="ptl_finish_to_refresh">刷新完成</string>
+
+    <string name="ptl_load_more">加载中…</string>
+    <string name="ptl_no_more">- 到底了 -</string>
+</resources>
