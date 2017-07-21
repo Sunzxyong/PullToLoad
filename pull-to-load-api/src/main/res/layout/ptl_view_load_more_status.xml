@@ -3,7 +3,7 @@
              xmlns:aapt="http://schemas.android.com/aapt"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:background="#f6f6f6">
+             android:background="#F0F0F0">
 
     <LinearLayout
         android:layout_width="match_parent"

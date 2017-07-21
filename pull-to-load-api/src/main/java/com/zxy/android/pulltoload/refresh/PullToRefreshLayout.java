@@ -44,7 +44,8 @@ public class PullToRefreshLayout extends ViewGroup implements NestedScrollingPar
     private static final int DEFAULT_REFRESH_STATE_DURATION = 300;
     private static final int DEFAULT_FINISH_STATE_DURATION = 450;
 
-    private static final int MESSAGE_VIEW_TRAVERSE = 100;
+    private static final int MESSAGE_VIEW_RESIZE = 100;
+    private static final int MESSAGE_VIEW_TRAVERSE = 101;
 
     private NestedScrollingParentHelper mNestedScrollingParentHelper;
     private NestedScrollingChildHelper mNestedScrollingChildHelper;
@@ -63,7 +64,6 @@ public class PullToRefreshLayout extends ViewGroup implements NestedScrollingPar
 
     private int mRefreshHeight;
     private int mPendingHeight;
-    private int mRefreshLayoutHeight;
     private Scroller mScroller;
     private int mTouchSlop;
     private float mStartX;
@@ -113,8 +113,11 @@ public class PullToRefreshLayout extends ViewGroup implements NestedScrollingPar
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == MESSAGE_VIEW_TRAVERSE)
+            if (msg.what == MESSAGE_VIEW_RESIZE) {
+                mRefreshContainer.setLayoutParams(new PullToRefreshLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getMeasuredHeight()));
+            } else if (msg.what == MESSAGE_VIEW_TRAVERSE) {
                 mDefaultScrollUpProcessor.collectViewGroup(mContentView);
+            }
         }
     };
 
@@ -159,32 +162,78 @@ public class PullToRefreshLayout extends ViewGroup implements NestedScrollingPar
         ViewConfiguration configuration = ViewConfiguration.get(getContext());
         mTouchSlop = configuration.getScaledTouchSlop();
 
-        mRefreshContainer.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mRefreshContainer.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
 
         mDefaultScrollUpProcessor = new DefaultScrollUpProcessor();
+
+        addRefreshStateListener(mRefreshStateWatcher);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         ensureChildCount();
-        int count = getChildCount();
+
+        enableRefreshView();
+
+        final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        final int count = getChildCount();
+
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
-            if (child == null || child.getVisibility() == View.GONE)
+            if (child == null || child.getVisibility() == GONE)
                 continue;
-            measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
+            measureChildWithMargins(getChildAt(i), widthMeasureSpec, 0, heightMeasureSpec, 0);
         }
-        mRefreshLayoutHeight = getMeasuredHeight();
+
+        if (count <= 1) {
+            if (widthMode == MeasureSpec.AT_MOST && heightMode == MeasureSpec.AT_MOST) {
+                setMeasuredDimension(0, 0);
+            } else if (widthMode == MeasureSpec.AT_MOST) {
+                setMeasuredDimension(0, heightSize);
+            } else if (heightMode == MeasureSpec.AT_MOST) {
+                setMeasuredDimension(widthSize, 0);
+            }
+            return;
+        }
+
+        View realChild = getChildAt(1);
+        if (realChild == null) {
+            if (widthMode == MeasureSpec.AT_MOST && heightMode == MeasureSpec.AT_MOST) {
+                setMeasuredDimension(0, 0);
+            } else if (widthMode == MeasureSpec.AT_MOST) {
+                setMeasuredDimension(0, heightSize);
+            } else if (heightMode == MeasureSpec.AT_MOST) {
+                setMeasuredDimension(widthSize, 0);
+            }
+        } else {
+            MarginLayoutParams params = (MarginLayoutParams) realChild.getLayoutParams();
+            int childWidth = realChild.getMeasuredWidth();
+            int childHeight = realChild.getMeasuredHeight();
+
+            if (widthMode == MeasureSpec.AT_MOST && heightMode == MeasureSpec.AT_MOST) {
+                setMeasuredDimension(childWidth + params.leftMargin + params.rightMargin, childHeight + params.topMargin + params.bottomMargin);
+            } else if (widthMode == MeasureSpec.AT_MOST) {
+                setMeasuredDimension(childWidth + params.leftMargin + params.rightMargin, heightSize);
+            } else if (heightMode == MeasureSpec.AT_MOST) {
+                setMeasuredDimension(widthSize, childHeight + params.topMargin + params.bottomMargin);
+            }
+        }
+
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         ensureChildCount();
-        int count = getChildCount();
-        if (count == 0)
-            return;
+
+        enableRefreshView();
+
+        if (changed && getMeasuredHeight() != mRefreshContainer.getMeasuredHeight())
+            mHandler.sendEmptyMessage(MESSAGE_VIEW_RESIZE);
 
         View contentChild = getChildAt(1);
         if (mContentView != contentChild) {
@@ -192,6 +241,7 @@ public class PullToRefreshLayout extends ViewGroup implements NestedScrollingPar
             mHandler.sendEmptyMessage(MESSAGE_VIEW_TRAVERSE);
         }
 
+        int count = getChildCount();
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             if (child == null || child.getVisibility() == GONE)
@@ -201,8 +251,8 @@ public class PullToRefreshLayout extends ViewGroup implements NestedScrollingPar
             int childTop = getPaddingTop() + lp.topMargin;
 
             int childWidth = child.getMeasuredWidth();
-            int layoutHeight = mRefreshLayoutHeight - lp.topMargin - lp.bottomMargin - getPaddingBottom() - getPaddingTop();
-            child.layout(childLeft, (i - 1) * mRefreshLayoutHeight + childTop, childWidth + childLeft, (i - 1) * mRefreshLayoutHeight + layoutHeight + childTop);
+            int layoutHeight = getMeasuredHeight() - lp.topMargin - lp.bottomMargin - getPaddingBottom() - getPaddingTop();
+            child.layout(childLeft, (i - 1) * getMeasuredHeight() + childTop, childWidth + childLeft, (i - 1) * getMeasuredHeight() + layoutHeight + childTop);
         }
     }
 
@@ -262,9 +312,9 @@ public class PullToRefreshLayout extends ViewGroup implements NestedScrollingPar
             case MotionEvent.ACTION_MOVE:
                 int scrollY = (int) (mLastMoveY - ev.getRawY());
                 if (scrollY >= 0) {
-                    scrollY = computeScrollOffset(scrollY, getScrollY(), mRefreshLayoutHeight);
+                    scrollY = computeScrollOffset(scrollY, getScrollY(), getMeasuredHeight());
                 } else {
-                    scrollY = -computeScrollOffset(scrollY, getScrollY(), mRefreshLayoutHeight);
+                    scrollY = -computeScrollOffset(scrollY, getScrollY(), getMeasuredHeight());
                 }
 
                 //handling the pull-up after pull-down.
@@ -333,54 +383,7 @@ public class PullToRefreshLayout extends ViewGroup implements NestedScrollingPar
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        //add refresh container.
-        addView(mRefreshContainer, 0);
-
-        mRefreshContainer.setBackgroundColor(0xFFF6F6F6);
-        mRefreshContainer.removeAllViews();
-        mDefaultRefreshView = LayoutInflater.from(getContext()).inflate(R.layout.ptl_view_refresh_status, null);
-        mRefreshInfoTv = (TextView) mDefaultRefreshView.findViewById(R.id.tv_refresh_info);
-        mRefreshInfoImg = (ImageView) mDefaultRefreshView.findViewById(R.id.img_refresh_info);
-        mRefreshProgressBar = (ProgressBar) mDefaultRefreshView.findViewById(R.id.progress_refreshing);
-        mRefreshContainer.addView(mDefaultRefreshView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        addRefreshStateListener(new OnRefreshStateListener() {
-            @Override
-            public void onPrepare(int curOffset, int maxOffset) {
-                mRefreshInfoTv.setText(getResources().getString(R.string.ptl_prepare_to_refresh));
-                mRefreshInfoImg.setVisibility(VISIBLE);
-                mRefreshProgressBar.setVisibility(GONE);
-                mRefreshInfoImg.setImageResource(R.drawable.ptl_ic_arrow_downward);
-            }
-
-            @Override
-            public void onReady(int offset) {
-                mRefreshInfoTv.setText(getResources().getString(R.string.ptl_ready_to_refresh));
-                mRefreshInfoImg.setVisibility(VISIBLE);
-                mRefreshProgressBar.setVisibility(GONE);
-                mRefreshInfoImg.setImageResource(R.drawable.ptl_ic_arrow_upward);
-            }
-
-            @Override
-            public void onRefreshing(int offset) {
-                mRefreshInfoTv.setText(getResources().getString(R.string.ptl_is_refreshing));
-                mRefreshProgressBar.setVisibility(VISIBLE);
-                mRefreshInfoImg.setVisibility(GONE);
-            }
-
-            @Override
-            public void onFinish() {
-                mRefreshInfoTv.setText(getResources().getString(R.string.ptl_finish_to_refresh));
-                mRefreshProgressBar.setVisibility(GONE);
-                mRefreshInfoImg.setVisibility(GONE);
-            }
-        });
-
-        enableRefreshHeight(mDefaultRefreshView);
-        ensureChildCount();
-
-        addRefreshStateListener(mRefreshStateWatcher);
-
+        addRefreshView();
     }
 
     @Override
@@ -524,6 +527,60 @@ public class PullToRefreshLayout extends ViewGroup implements NestedScrollingPar
         } else {
             super.requestDisallowInterceptTouchEvent(disallowIntercept);
         }
+    }
+
+    private void enableRefreshView() {
+        View child = getChildAt(0);
+        if (child == null || child != mRefreshContainer)
+            addRefreshView();
+    }
+
+    private void addRefreshView() {
+        //add refresh container.
+        addView(mRefreshContainer, 0);
+
+        mRefreshContainer.setBackgroundColor(0xFFF0F0F0);
+        mRefreshContainer.removeAllViews();
+        mDefaultRefreshView = LayoutInflater.from(getContext()).inflate(R.layout.ptl_view_refresh_status, null);
+        mRefreshInfoTv = (TextView) mDefaultRefreshView.findViewById(R.id.tv_refresh_info);
+        mRefreshInfoImg = (ImageView) mDefaultRefreshView.findViewById(R.id.img_refresh_info);
+        mRefreshProgressBar = (ProgressBar) mDefaultRefreshView.findViewById(R.id.progress_refreshing);
+        mRefreshContainer.addView(mDefaultRefreshView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        addRefreshStateListener(new OnRefreshStateListener() {
+            @Override
+            public void onPrepare(int curOffset, int maxOffset) {
+                mRefreshInfoTv.setText(getResources().getString(R.string.ptl_prepare_to_refresh));
+                mRefreshInfoImg.setVisibility(VISIBLE);
+                mRefreshProgressBar.setVisibility(GONE);
+                mRefreshInfoImg.setImageResource(R.drawable.ptl_ic_arrow_downward);
+            }
+
+            @Override
+            public void onReady(int offset) {
+                mRefreshInfoTv.setText(getResources().getString(R.string.ptl_ready_to_refresh));
+                mRefreshInfoImg.setVisibility(VISIBLE);
+                mRefreshProgressBar.setVisibility(GONE);
+                mRefreshInfoImg.setImageResource(R.drawable.ptl_ic_arrow_upward);
+            }
+
+            @Override
+            public void onRefreshing(int offset) {
+                mRefreshInfoTv.setText(getResources().getString(R.string.ptl_is_refreshing));
+                mRefreshProgressBar.setVisibility(VISIBLE);
+                mRefreshInfoImg.setVisibility(GONE);
+            }
+
+            @Override
+            public void onFinish() {
+                mRefreshInfoTv.setText(getResources().getString(R.string.ptl_finish_to_refresh));
+                mRefreshProgressBar.setVisibility(GONE);
+                mRefreshInfoImg.setVisibility(GONE);
+            }
+        });
+
+        enableRefreshHeight(mDefaultRefreshView);
+        ensureChildCount();
     }
 
     public void setRefresh(final boolean refresh) {

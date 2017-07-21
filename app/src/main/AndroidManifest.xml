@@ -15,6 +15,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".RecyclerViewRefreshActivity">
+        </activity>
+        <activity android:name=".MultiViewRefreshActivity">
+        </activity>
+        <activity android:name=".MultiScrollRefreshActivity">
+        </activity>
+        <activity android:name=".SimpleViewRefreshActivity">
+        </activity>
+        <activity android:name=".ScrollViewRefreshActivity">
+        </activity>
     </application>
 
 </manifest>

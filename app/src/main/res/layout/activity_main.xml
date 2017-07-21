@@ -1,77 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.zxy.android.pulltoload.test.MainActivity">
 
-    <com.zxy.android.pulltoload.refresh.PullToRefreshLayout
-        android:id="@+id/refresh_layout"
+    <Button
+        android:id="@+id/btn1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="SimpleView Refresh"
+        android:textAllCaps="false"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="RecyclerView Refresh"
+        android:textAllCaps="false"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/holo_purple"
-                android:clickable="true"
-                android:gravity="center">
+    <Button
+        android:id="@+id/btn3"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="ScrollView Refresh"
+        android:textAllCaps="false"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="这是一个TextView"
-                    android:textColor="#ffffff"
-                    android:textSize="16sp"/>
-            </RelativeLayout>
+    <Button
+        android:id="@+id/btn4"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="MultiView Refresh"
+        android:textAllCaps="false"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+    <Button
+        android:id="@+id/btn5"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="MultiScroll Refresh"
+        android:textAllCaps="false"/>
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:text="1"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:text="2"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:text="3"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:text="4"/>
-                </LinearLayout>
-
-            </ScrollView>
-        </LinearLayout>
-    </com.zxy.android.pulltoload.refresh.PullToRefreshLayout>
-
-</RelativeLayout>
+</LinearLayout>
