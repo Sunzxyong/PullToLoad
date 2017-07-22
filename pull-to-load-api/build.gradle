@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 24
@@ -19,6 +18,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -27,22 +29,20 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.1'
 }
 
-ext {
-    upload_group_id = 'com.zxy.android'
-    upload_artifact_id = 'pull-to-load'
-    upload_version = '0.0.1'
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-    site_url = 'https://github.com/Sunzxyong/pull-to-load'
-    git_url = 'https://github.com/Sunzxyong/pull-to-load.git'
-    git_issue_url = 'https://github.com/Sunzxyong/pull-to-load/issues'
-
-    bintray_pkg_repo = 'maven'
-    bintray_pkg_name = 'pull-to-load'
-    bintray_pkg_desc = 'a refresh framework supports any view and multiple nested views, and contains the wrapper which can load more.'
-
-    developer_id = 'Sunzxyong'
-    developer_name = 'zhengxiaoyong'
-    developer_email = '1175151739@qq.com'
+publish {
+    userOrg = 'sunzxyong'
+    groupId = 'com.zxy.android'
+    artifactId = 'pull-to-load'
+    publishVersion = '0.0.1'
+    repoName = 'maven'
+    dryRun = 'false'
+    desc = 'a refresh framework supports any view and multiple nested views, and contains the wrapper which can load more'
+    website = 'https://github.com/Sunzxyong/pull-to-load'
+    issueTracker = 'https://github.com/Sunzxyong/pull-to-load/issues'
+    repository = 'https://github.com/Sunzxyong/pull-to-load.git'
+    bintrayUser = properties.getProperty("bintray.user")
+    bintrayKey = properties.getProperty("bintray.apikey")
 }
-
-apply from: 'publish.gradle'
