@@ -219,7 +219,7 @@ public class RecyclerViewAdapterWrapper extends RecyclerView.Adapter<RecyclerVie
         ((FrameLayout) mViewContainer).addView(mNoMoreView, DEFAULT_VIEW_LAYOUT_PARAMS);
     }
 
-    public void setupLoadailedStatus() {
+    public void setupLoadFailedStatus() {
         setupHasMoreDataStatus();
     }
 
