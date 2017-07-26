@@ -1,9 +1,9 @@
-# **pull-to-load**
+# **PullToLoad**
 a refresh framework supports any view and multiple nested views, and contains the wrapper which can load more. 
 
 ----
 
-[ ![Download](https://api.bintray.com/packages/sunzxyong/maven/pull-to-load/images/download.svg) ](https://bintray.com/sunzxyong/maven/pull-to-load/_latestVersion)[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]() [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)]() ![](https://img.shields.io/badge/library-lightweight-yellow.svg)
+[ ![Download](https://api.bintray.com/packages/sunzxyong/maven/PullToLoad/images/download.svg) ](https://bintray.com/sunzxyong/maven/PullToLoad/_latestVersion)[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]() [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)]() ![](https://img.shields.io/badge/library-lightweight-yellow.svg)
 
 ## **Usage**
 

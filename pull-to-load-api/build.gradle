@@ -34,15 +34,16 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 
 publish {
     userOrg = 'sunzxyong'
+    uploadName = 'PullToLoad'
     groupId = 'com.zxy.android'
     artifactId = 'pull-to-load'
     publishVersion = '0.0.1'
     repoName = 'maven'
     dryRun = 'false'
     desc = 'a refresh framework supports any view and multiple nested views, and contains the wrapper which can load more'
-    website = 'https://github.com/Sunzxyong/pull-to-load'
-    issueTracker = 'https://github.com/Sunzxyong/pull-to-load/issues'
-    repository = 'https://github.com/Sunzxyong/pull-to-load.git'
+    website = 'https://github.com/Sunzxyong/PullToLoad'
+    issueTracker = 'https://github.com/Sunzxyong/PullToLoad/issues'
+    repository = 'https://github.com/Sunzxyong/PullToLoad.git'
     bintrayUser = properties.getProperty("bintray.user")
     bintrayKey = properties.getProperty("bintray.apikey")
 }
