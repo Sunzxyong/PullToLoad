@@ -15,7 +15,7 @@ For more effect see [Art](https://github.com/Sunzxyong/pull-to-load/tree/master/
 ### **Installation**
 
 ```
-    compile 'com.zxy.android:pull-to-load:0.0.1'
+    compile 'com.zxy.android:pull-to-load:1.0.0'
 ```
 
 ### **Refresh**

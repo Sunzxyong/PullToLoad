@@ -37,7 +37,7 @@ publish {
     uploadName = 'PullToLoad'
     groupId = 'com.zxy.android'
     artifactId = 'pull-to-load'
-    publishVersion = '0.0.1'
+    publishVersion = '1.0.0'
     repoName = 'maven'
     dryRun = 'false'
     desc = 'a refresh framework supports any view and multiple nested views, and contains the wrapper which can load more'
