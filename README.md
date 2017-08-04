@@ -85,7 +85,7 @@ The Effect:
 ![](https://github.com/Sunzxyong/pull-to-load/blob/master/art/loadmore.gif)
 
 ## **Version**
-* **v0.0.1**:The first version.
+* **v1.0.0**:The first version.
 
 ## **License**
 
